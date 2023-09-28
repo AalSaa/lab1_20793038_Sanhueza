@@ -1,10 +1,14 @@
 #lang racket
 
+; ######################################## LLAMADO DE TDA TOOLS ##############################
+
+(require "TDA_tools_20793038_SanhuezaVega.rkt")
+
 ; ######################################## TDA FLOW ##########################################
 
 ; ######################################## REPRESENTACION ####################################
 
-; Este TDA corresponde a una flujo.
+; Este TDA corresponde a un flujo.
 ; Dentro se guardara un id del flujo, un nombre para el flujo y una lista de opciones.
 
 ; ######################################## CONSTRUCTOR #######################################
@@ -14,29 +18,7 @@
 ; Rec: flow (list)
 ; Recursion: -
 (define flow (lambda (id name . option)
-    (set-flow id name (add-options-in-list option null))
-))
-
-; ######################################## PERTENENCIA #######################################
-
-; Descripcion: Funcion que filtra opciones que tengan el id indicado.
-; Dom: option-id (int) X op-list (list)
-; Rec: filtered-o-list (list)
-; Recursion: -
-(define has-same-option-id? (lambda (option-id op-list)
-    (filter 
-        ((lambda (option-id) (lambda (option) (if (= option-id (get-option-id option)) #t #f)))
-        option-id)
-        op-list
-    )
-))
-
-; Descripcion: Funcion que identifica si el id indicado ya existe dentro de una lista.
-; Dom: option (list) X op-list (list)
-; Rec: boolean
-; Recursion: -
-(define option-id-exists? (lambda (option op-list)
-    (if (null? (has-same-option-id? (get-option-id option) op-list)) #f #t)
+    (set-flow id name (add-elements-in-list option null))
 ))
 
 ; ######################################## SELECTOR ##########################################
@@ -65,14 +47,6 @@
     (list-ref flow 2)
 ))
 
-; Descripcion: Funcion que obtiene el id de una opcion.
-; Dom: option (list)
-; Rec: option-id (int)
-; Recursion: -
-(define get-option-id (lambda (option)
-    (list-ref option 0)
-))
-
 ; ######################################## MODIFICADOR #######################################
 
 ; Descripcion: Funcion que añade una funcion a un flujo.
@@ -80,7 +54,7 @@
 ; Rec: flow (list)
 ; Recursion: -
 (define flow-add-option (lambda (flow option)
-    (if (option-id-exists? option (get-flow-op-list flow))
+    (if (id-exists? option (get-flow-op-list flow))
         flow
         (set-flow 
             (get-flow-id flow)
@@ -96,20 +70,6 @@
 ; Recursion: -
 (define set-flow (lambda (id name op-list)
     (list id name op-list)
-))
-
-; Descripcion: Funcion que va agregando opciones dentro de una lista.
-; Dom: options (list) X op_list (list)
-; Rec: op_list (list)
-; Recursion: cola
-(define add-options-in-list (lambda (options op-list)
-    (if (null? options)
-        op-list
-        (if (option-id-exists? (car options) op-list)
-            (add-options-in-list (cdr options) op-list)
-            (add-options-in-list (cdr options) (append op-list (list (car options))))
-        )
-    )
 ))
 
 ; ######################################## EXPORTACION DE FUNCION ############################
