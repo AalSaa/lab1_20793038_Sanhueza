@@ -10,22 +10,22 @@
 ; ######################################## PERTENENCIA #######################################
 
 ; Descripcion: Funcion que filtra a los elementos que tengan el id indicado.
-; Dom: id (int) X e-list (list)
-; Rec: filtered-e-list (list)
+; Dom: id (int) X elements-list (list)
+; Rec: filtered-elements-list (list)
 ; Recursion: -
-(define has-same-id? (lambda (id e-list)
+(define has-same-id? (lambda (id elements-list)
     (filter 
         ((lambda (id) (lambda (element) (if (= id (get-id element)) #t #f))) id)
-        e-list
+        elements-list
     )
 ))
 
 ; Descripcion: Funcion que revisa si el id de un elemento ya existe en una lista de elementos.
-; Dom: element (list) X e-list (list)
+; Dom: element (list) X elements-list (list)
 ; Rec: boolean
 ; Recursion: -
-(define id-exists? (lambda (element e-list)
-    (if (null? (has-same-id? (get-id element) e-list)) #f #t)
+(define id-exists? (lambda (element elements-list)
+    (if (null? (has-same-id? (get-id element) elements-list)) #f #t)
 ))
 
 ; ######################################## SELECTOR ##########################################
@@ -41,15 +41,15 @@
 ; ######################################## MODIFICADOR #######################################
 
 ; Descripcion: Funcion que añade elementos a una lista evitando que se repita el id.
-; Dom: elements (list) X e-list (list)
-; Rec: e-list (list)
+; Dom: elements (list) X elements-list (list)
+; Rec: elements-list (list)
 ; Recursion: -
-(define add-elements-in-list (lambda (elements e-list)
+(define add-elements-in-list (lambda (elements elements-list)
     (if (null? elements)
-        e-list
-        (if (id-exists? (car elements) e-list)
-            (add-elements-in-list (cdr elements) e-list)
-            (add-elements-in-list (cdr elements) (append e-list (list (car elements))))
+        elements-list
+        (if (id-exists? (car elements) elements-list)
+            (add-elements-in-list (cdr elements) elements-list)
+            (add-elements-in-list (cdr elements) (append elements-list (list (car elements))))
         )
     )
 ))

@@ -3,6 +3,7 @@
 ; ######################################## LLAMADO DE TDA´s ##################################
 
 (require "TDA_date_20793038_SanhuezaVega.rkt")
+(require "TDA_user_20793038_SanhuezaVega.rkt")
 (require "TDA_tools_20793038_SanhuezaVega.rkt")
 
 ; ######################################## TDA SYSTEM ########################################
@@ -93,7 +94,43 @@
     )
 ))
 
-; Descripcion: Funcion que actualiza el sistema.
+; Descripcion: Funcion que añade un usuario al sistema.
+; Dom: system (list) X username (list)
+; Rec: system (list)
+; Recursion: -
+(define system-add-user (lambda (system username)
+    (if (username-exists? username (get-system-users system))
+        system
+        (set-system
+            (get-system-date system)
+            (get-system-name system)
+            (get-initial-cb-code-link system)
+            (append (get-system-users system) (list (set-user username #f)))
+            (get-chat-history system)
+            (get-system-cb-list system)
+        )
+    )
+))
+
+; Descripcion: Funcion que loguea al usuario indicado en el sistema.
+; Dom: system (list) X username (string)
+; Rec: system (list)
+; Recursion: -
+(define system-login (lambda (system username)
+    (if (not (someone-logged-in? (get-system-users system)))
+        (set-system 
+            (get-system-date system)
+            (get-system-name system)
+            (get-initial-cb-code-link system)
+            (login-user username (get-system-users system))
+            (get-chat-history system)
+            (get-system-cb-list system)
+        )
+        system
+    )
+))
+
+; Descripcion: Funcion que modifica el sistema.
 ; Dom: system-name (string) X system-date (string) X system-users (list) X chatbot-list (list)
 ; Rec: system (list)
 ; Recursion: -
@@ -104,4 +141,4 @@
 
 ; ######################################## EXPORTACION DE FUNCION ############################
 
-(provide system system-add-chatbot)
+(provide system system-add-chatbot system-add-user system-login)

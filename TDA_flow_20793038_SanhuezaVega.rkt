@@ -64,7 +64,7 @@
     )
 ))
 
-; Descripcion: Funcion que actualiza el flujo.
+; Descripcion: Funcion que modifica el flujo.
 ; Dom: id (int) X name (string) X op-list (list) 
 ; Rec: flow (list)
 ; Recursion: -

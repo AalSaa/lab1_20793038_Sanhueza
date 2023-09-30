@@ -76,7 +76,7 @@
     )
 ))
 
-; Descripcion: Funcion que actualiza el chatbot.
+; Descripcion: Funcion que modifica el chatbot.
 ; Dom: id (int) X chatbot-name (string) X welcome-message (string) 
 ;      X start-flow-id (int) X flow-list (list)
 ; Rec: chatbot (list)
