@@ -83,9 +83,17 @@
     )) username) users-list)
 ))
 
+; Descripcion: Funcion que desconecta a un usuario.
+; Dom: users-list (list)
+; Rec: users-list (list)
+; Recursion: -
+(define logout (lambda (users-list)
+    (map (lambda (user) (set-user (get-username user) #f)) users-list)
+))
+
 ; ######################################## EXPORTACION DE FUNCION ############################
 
-(provide username-exists? set-user someone-logged-in? login-user)
+(provide username-exists? set-user someone-logged-in? login-user logout)
 
 
 

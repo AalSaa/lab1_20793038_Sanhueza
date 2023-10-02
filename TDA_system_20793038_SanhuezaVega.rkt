@@ -50,6 +50,10 @@
     (list-ref system 1)
 ))
 
+; Descripcion: Funcion que obtiene el id del chatbot inicial.
+; Dom: system (list)
+; Rec: initial-cb-code-link (int)
+; Recursion: -
 (define get-initial-cb-code-link (lambda (system)
     (list-ref system 2)
 ))
@@ -62,6 +66,10 @@
     (list-ref system 3)
 ))
 
+; Descripcion: Funcion que obtiene el historial del chat.
+; Dom: system (list)
+; Rec: chat-history (list)
+; Recursion: -
 (define get-chat-history (lambda (system)
     (list-ref system 4)
 ))
@@ -130,6 +138,21 @@
     )
 ))
 
+; Descripcion: Funcion que desloguea al usuario en el sistema.
+; Dom: system (list)
+; Rec: system (list)
+; Recursion: -
+(define system-logout (lambda (system)
+    (set-system
+        (get-system-date system)
+        (get-system-name system)
+        (get-initial-cb-code-link system)
+        (logout (get-system-users system))
+        (get-chat-history system)
+        (get-system-cb-list system)
+    )
+))
+
 ; Descripcion: Funcion que modifica el sistema.
 ; Dom: system-name (string) X system-date (string) X system-users (list) X chatbot-list (list)
 ; Rec: system (list)
@@ -141,4 +164,4 @@
 
 ; ######################################## EXPORTACION DE FUNCION ############################
 
-(provide system system-add-chatbot system-add-user system-login)
+(provide system system-add-chatbot system-add-user system-login system-logout)

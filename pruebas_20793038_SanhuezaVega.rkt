@@ -22,4 +22,6 @@
 (define s6 (system-login s5 "user8")) ;user8 no existe. No inicia sesión
 (define s7 (system-login s6 "user1"))
 (define s8 (system-login s7 "user2"))  ;no permite iniciar sesión a user2, pues user1 ya inició sesión
-s8
+(define s9 (system-logout s8))
+(define s10 (system-login s9 "user2"))
+s10
