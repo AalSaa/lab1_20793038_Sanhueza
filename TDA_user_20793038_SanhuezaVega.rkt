@@ -9,29 +9,19 @@
 
 ; ######################################## PERTENENCIA #######################################
 
-; Descripcion: Funcion que filtra a los usuarios que tengan el username indicado.
-; Dom: username (string) X users-list (list)
-; Rec: filtered-users-list (list)
-; Recursion: -
-(define has-same-username? (lambda (username users-list)
-    (filter ((lambda (username) (lambda (user) (if (string-ci=? username (get-username user)) #t #f))) 
-        username) users-list)
-))
-
 ; Descripcion: Funcion que verifica si el username de un usuario ya existe en una lista de usuarios.
 ; Dom: username (list) X users-list (list)
 ; Rec: boolean
 ; Recursion: -
 (define username-exists? (lambda (username users-list)
-    (if (null? (has-same-username? username users-list)) #f #t)
-))
+    (define aux (lambda (username users-list)
+        (filter 
+            ((lambda (username) (lambda (user) (if (string-ci=? username (get-username user)) #t #f))) 
+            username) users-list
+        )
+    ))
 
-; Descripcion: Funcion que filtra a los usuarios que esten conectados.
-; Dom: users-list
-; Rec: filtered-users-list
-; Recursion: -
-(define user-logged-in? (lambda (users-list)
-    (filter (lambda (user) (if (equal? #t (get-user-status user)) #t #f)) users-list)
+    (if (null? (aux username users-list)) #f #t)
 ))
 
 ; Descripcion: Funcion que verifica si un usuario esta conectado.
@@ -39,7 +29,10 @@
 ; Rec: boolean
 ; Recursion: -
 (define someone-logged-in? (lambda (users-list)
-    (if (null? (user-logged-in? users-list)) #f #t)
+    (define aux (lambda (users-list)
+        (filter (lambda (user) (if (equal? #t (get-user-status user)) #t #f)) users-list)
+    ))
+    (if (null? (aux users-list)) #f #t)
 ))
 
 ; ######################################## SELECTOR ##########################################
@@ -60,14 +53,42 @@
     (list-ref user 1)
 ))
 
+; Descripcion: Funcion que obtiene el codigo del chatbot donde esta ubicado el usuario.
+; Dom: user (list)
+; Rec: cb-code-link (int)
+; Recursion: -
+(define get-cb-code-link (lambda (user)
+    (list-ref user 2)
+))
+
+; Descripcion: Funcion que obtiene el codigo del flujo donde esta ubicado el usuario.
+; Dom: user (list)
+; Rec: fl-code-link (int)
+; Recursion: -
+(define get-fl-code-link (lambda (user)
+    (list-ref user 3)
+))
+
+; Descripcion: Funcion que obtiene el usuario logueado en el sistema.
+; Dom: users-list (list)
+; Rec: user (list)
+; Recursion: -
+(define get-user-logged (lambda (users-list)
+    (define aux (lambda (users-list)
+        (filter (lambda (user) (if (equal? #t (get-user-status user)) #t #f)) users-list)
+    ))
+
+    (list-ref (aux users-list) 0)
+))
+
 ; ######################################## MODIFICADOR #######################################
 
 ; Descripcion: Funcion que genera un usuario.
-; Dom: username (string) X user-status (boolean) X user-chat-history (list)
+; Dom: username (string) X user-status (boolean) X user-cb-codelink (int) X user-fl-codelink
 ; Rec: user (list)
 ; Recursion: -
-(define set-user (lambda (username user-status)
-    (list username user-status)
+(define set-user (lambda (username user-status cb-code-link fl-code-link)
+    (list username user-status cb-code-link fl-code-link)
 ))
 
 ; Descripcion: Funcion que conecta a un usuario.
@@ -77,7 +98,7 @@
 (define login-user (lambda (username users-list)
     (map ((lambda (username) (lambda (user) 
         (if (string-ci=? username (get-username user))
-            (set-user username #t)
+            (set-user username #t -1 -1)
             user
         )
     )) username) users-list)
@@ -88,7 +109,7 @@
 ; Rec: users-list (list)
 ; Recursion: -
 (define logout (lambda (users-list)
-    (map (lambda (user) (set-user (get-username user) #f)) users-list)
+    (map (lambda (user) (set-user (get-username user) #f -1 -1)) users-list)
 ))
 
 ; ######################################## EXPORTACION DE FUNCION ############################

@@ -113,7 +113,7 @@
             (get-system-date system)
             (get-system-name system)
             (get-initial-cb-code-link system)
-            (append (get-system-users system) (list (set-user username #f)))
+            (append (get-system-users system) (list (set-user username #f -1 -1)))
             (get-chat-history system)
             (get-system-cb-list system)
         )
