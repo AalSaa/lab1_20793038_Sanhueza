@@ -84,7 +84,7 @@
 ; ######################################## MODIFICADOR #######################################
 
 ; Descripcion: Funcion que genera un usuario.
-; Dom: username (string) X user-status (boolean) X user-cb-codelink (int) X user-fl-codelink
+; Dom: username (string) X user-status (boolean) X user-chat-history (list)
 ; Rec: user (list)
 ; Recursion: -
 (define set-user (lambda (username user-status cb-code-link fl-code-link)
@@ -97,7 +97,7 @@
 ; Recursion: -
 (define login-user (lambda (username users-list)
     (map ((lambda (username) (lambda (user) 
-        (if (string-ci=? username (get-username user))
+        (if (string=? username (get-username user))
             (set-user username #t -1 -1)
             user
         )
@@ -112,9 +112,20 @@
     (map (lambda (user) (set-user (get-username user) #f -1 -1)) users-list)
 ))
 
+(define change-codelinks-in-user (lambda (users-list n-cb-code-link n-fl-code-link)
+    (map 
+        (lambda (user)
+            (if (get-user-status user) 
+                (set-user (get-username user) #t n-cb-code-link n-fl-code-link)
+                user
+            )
+        )
+        users-list
+    )
+))
 ; ######################################## EXPORTACION DE FUNCION ############################
 
-(provide username-exists? set-user someone-logged-in? login-user logout)
+(provide (all-defined-out))
 
 
 

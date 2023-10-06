@@ -18,6 +18,84 @@
     (list id message chatbot-codelink flow-codelink keyword)
 ))
 
+; ######################################## PERTENENCIA #######################################
+
+; Descripcion: Funcion recursiva que verifica si existe una opcion que tenga el id o palabra clave
+;              indicado.
+; Dom: option-list (list) X message (string)
+; Rec: boolean
+; Recursion: cola
+(define option-exists-by-message?-rec (lambda (option-list message)
+    (define aux (lambda (ol message)
+        (if (null? ol)
+            #f
+            (if (or (not (boolean? (member message (get-option-keyword (car ol)))))
+                    (string=? message (number->string (get-option-id (car ol)))))
+                #t
+                (aux (cdr ol) message)        
+            )
+        )
+    ))
+    (aux option-list message)
+))
+
+; ######################################## SELECTOR ##########################################
+
+; Descripcion: Funcion que obtiene el id de una opcion.
+; Dom: option (list)
+; Rec: id (int)
+; Recursion: -
+(define get-option-id (lambda (option)
+    (list-ref option 0)    
+))
+
+; Descripcion: Funcion que obtiene el mensaje de una opcion.
+; Dom: option (list)
+; Rec: message (string)
+; Recursion: -
+(define get-option-message (lambda (option)
+    (list-ref option 1)
+))
+
+; Descripcion: Funcion que obtiene el id del chatbot enlazado a la opcion.
+; Dom: option (list)
+; Rec: cb-codelink (int)
+; Recursion: -
+(define get-option-cb-codelink (lambda (option)
+    (list-ref option 2)
+))
+
+; Descripcion: Funcion que obtiene el id del flujo enlazado a la opcion.
+; Dom: option (list)
+; Rec: fl-codelink (int)
+; Recursion: -
+(define get-option-fl-codelink (lambda (option)
+    (list-ref option 3)
+))
+
+; Descripcion: Funcion que obtiene las palabras claves relacionadas a la opcion.
+; Dom: option (list)
+; Rec: keyword (list)
+; Recursion: -
+(define get-option-keyword (lambda (option)
+    (list-ref option 4)
+))
+
+; Descripcion: Funcion recursiva que obtiene una opcion a partir de su id o palabra clave.
+; Dom: option-list (list) X message (string)
+; Rec: option (list)
+; Recursion: cola
+(define get-option-by-message-rec (lambda (option-list message)
+    (define aux (lambda (ol message)
+        (if (or (not (boolean? (member message (get-option-keyword (car ol)))))
+                (string=? message (number->string (get-option-id (car ol)))))
+                (car ol)
+                (aux (cdr ol) message)        
+        )
+    ))
+    (aux option-list message)
+))
+
 ; ######################################## EXPORTACION DE FUNCION ############################
 
-(provide option)
+(provide (all-defined-out))

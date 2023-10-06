@@ -22,6 +22,15 @@
     (set-chatbot id name welcome-message start-flow-id (add-elements-in-list flows null))
 ))
 
+; Descripcion: Funcion que construye un chatbot.
+; Dom: id (int) X chatbot-name (string) X welcome-message (string) 
+;      X start-flow-id (int) X flow-list (list)
+; Rec: chatbot (list)
+; Recursion: -
+(define set-chatbot (lambda (id chatbot-name welcome-message start-flow-id flow-list)
+    (list id chatbot-name welcome-message start-flow-id flow-list)
+))
+
 ; ######################################## SELECTOR ##########################################
 
 ; Descripcion: Funcion que obtiene el id del chatbot.
@@ -44,11 +53,11 @@
 ; Dom: chatbot (list)
 ; Rec: welcome-message (string)
 ; Recursion: -
-(define get-welcome-message (lambda (chatbot)
+(define get-chatbot-welcome-message (lambda (chatbot)
     (list-ref chatbot 2)
 ))
 
-(define get-start-flow-id (lambda (chatbot)
+(define get-chatbot-start-flow-id (lambda (chatbot)
     (list-ref chatbot 3)
 ))
 
@@ -70,21 +79,12 @@
     (set-chatbot
         (get-chatbot-id chatbot)
         (get-chatbot-name chatbot)
-        (get-welcome-message chatbot)
-        (get-start-flow-id chatbot)
+        (get-chatbot-welcome-message chatbot)
+        (get-chatbot-start-flow-id chatbot)
         (add-elements-in-list (list flow) (get-chatbot-fl-list chatbot))
     )
 ))
 
-; Descripcion: Funcion que modifica el chatbot.
-; Dom: id (int) X chatbot-name (string) X welcome-message (string) 
-;      X start-flow-id (int) X flow-list (list)
-; Rec: chatbot (list)
-; Recursion: -
-(define set-chatbot (lambda (id chatbot-name welcome-message start-flow-id flow-list)
-    (list id chatbot-name welcome-message start-flow-id flow-list)
-))
-
 ; ######################################## EXPORTACION DE FUNCION ############################
 
-(provide chatbot chatbot-add-flow)
+(provide (all-defined-out))

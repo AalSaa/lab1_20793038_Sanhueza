@@ -21,6 +21,14 @@
     (set-flow id name (add-elements-in-list option null))
 ))
 
+; Descripcion: Funcion que construye un flujo.
+; Dom: id (int) X name (string) X op-list (list) 
+; Rec: flow (list)
+; Recursion: -
+(define set-flow (lambda (id name op-list)
+    (list id name op-list)
+))
+
 ; ######################################## SELECTOR ##########################################
 
 ; Descripcion: Funcion que obtiene el id del flujo.
@@ -64,14 +72,6 @@
     )
 ))
 
-; Descripcion: Funcion que modifica el flujo.
-; Dom: id (int) X name (string) X op-list (list) 
-; Rec: flow (list)
-; Recursion: -
-(define set-flow (lambda (id name op-list)
-    (list id name op-list)
-))
-
 ; ######################################## EXPORTACION DE FUNCION ############################
 
-(provide flow flow-add-option)
+(provide (all-defined-out))

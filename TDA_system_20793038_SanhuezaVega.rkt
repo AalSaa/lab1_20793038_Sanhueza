@@ -3,6 +3,9 @@
 ; ######################################## LLAMADO DE TDA´s ##################################
 
 (require "TDA_date_20793038_SanhuezaVega.rkt")
+(require "TDA_option_20793038_SanhuezaVega.rkt")
+(require "TDA_flow_20793038_SanhuezaVega.rkt")
+(require "TDA_chatbot_20793038_SanhuezaVega.rkt")
 (require "TDA_user_20793038_SanhuezaVega.rkt")
 (require "TDA_tools_20793038_SanhuezaVega.rkt")
 
@@ -17,18 +20,40 @@
 
 ; ######################################## CONSTRUCTOR #######################################
 
-; Descripcion: Funcion que construye un sistema.
+; Descripcion: Funcion que crea un sistema.
 ; Dom: name (string) X chatbot (list)
 ; Rec: system (list)
 ; Recursion: -
-(define system (lambda (name initial-chatbot-code-link . chatbot)
+(define system (lambda (name start-cb-id . chatbot)
     (set-system
         (make-current-date)
         name
-        initial-chatbot-code-link
+        start-cb-id
         null
         null
         (add-elements-in-list chatbot null)
+    )
+))
+
+; Descripcion: Funcion que construye un sistema.
+; Dom: system-name (string) X system-date (string) X system-users (list) X chatbot-list (list)
+; Rec: system (list)
+; Recursion: -
+(define set-system 
+    (lambda (system-date system-name initial-cb-code-link system-users chat-history chatbot-list)
+        (list system-date system-name initial-cb-code-link system-users chat-history chatbot-list)
+))
+
+; ######################################## PERTENENCIA #######################################
+; Descripcion: Funcion que verifica si existe una opcion que contenga el id o mensaje indicado
+;              en la carpeta actual usando funciones recursivas.
+; Dom: system (list) X message (string)
+; Rec: boolean
+; Recursion: -
+(define valid-message?-rec (lambda (system message)
+    (if (not (boolean? (car (get-cb-and-fl-codelink system))))
+        (option-exists-by-message?-rec (get-current-op-list system) message)
+        #f
     )
 ))
 
@@ -54,7 +79,7 @@
 ; Dom: system (list)
 ; Rec: initial-cb-code-link (int)
 ; Recursion: -
-(define get-initial-cb-code-link (lambda (system)
+(define get-system-start-cb-id (lambda (system)
     (list-ref system 2)
 ))
 
@@ -70,7 +95,7 @@
 ; Dom: system (list)
 ; Rec: chat-history (list)
 ; Recursion: -
-(define get-chat-history (lambda (system)
+(define get-system-chat-history (lambda (system)
     (list-ref system 4)
 ))
 
@@ -80,6 +105,62 @@
 ; Recursion: -
 (define get-system-cb-list (lambda (system)
     (list-ref system 5)
+))
+
+; Descripcion: Funcion que obtiene los codelinks del chatbot y flujo actual.
+; Dom: system (list)
+; Rec: codelink-list (list)
+; Recursion: -
+(define get-cb-and-fl-codelink (lambda (system)
+    (if (or (= -1 (get-cb-code-link (get-user-logged (get-system-users system))))
+             (= -1 (get-fl-code-link (get-user-logged (get-system-users system)))))
+        (get-initial-cb-and-fl-codelink system)
+        (list (get-cb-code-link (get-user-logged (get-system-users system)))
+              (get-fl-code-link (get-user-logged (get-system-users system))))
+    )
+))
+
+; Descripcion: Funcion que obtiene los codelinks del chatbot y flujo iniciales dentro del sistema.
+; Dom: system (list)
+; Rec: codelink-list (list)
+; Recursion: cola
+(define get-initial-cb-and-fl-codelink (lambda (system)
+    (define aux (lambda (element-list id n codelinks)
+        (cond
+        [(= n 2)
+            (if (id-exists? (list id) element-list)
+                (aux 
+                    (get-chatbot-fl-list (get-element-by-id id element-list))
+                    (get-chatbot-start-flow-id (get-element-by-id id element-list))
+                    1
+                    (list id)
+                )
+                (list #f #f)
+            )
+        ]
+        [(= n 1)
+            (if (id-exists? (list id) element-list)
+                (append codelinks (list id))
+                (list #f #f)
+            )
+        ]
+        )
+    ))
+    (aux (get-system-cb-list system) (get-cb-code-link system) 2 null)
+))
+
+; Descripcion: Funcion que obtiene la lista de opciones actual del sistema.
+; Dom: system (list)
+; Rec: option-list (list)
+; Recursion: -
+(define get-current-op-list (lambda (system)
+    (define aux (lambda (system codelinks)
+        (get-flow-op-list
+            (get-element-by-id (list-ref codelinks 1)
+                (get-chatbot-fl-list 
+                    (get-element-by-id (list-ref codelinks 0) (get-system-cb-list system)
+    ))))))
+    (aux system (get-cb-and-fl-codelink system))
 ))
 
 ; ######################################## MODIFICADOR #######################################
@@ -94,9 +175,9 @@
         (set-system
             (get-system-date system)
             (get-system-name system)
-            (get-initial-cb-code-link system)
+            (get-system-start-cb-id system)
             (get-system-users system)
-            (get-chat-history system)
+            (get-system-chat-history system)
             (append (get-system-cb-list system) (list chatbot))
         )
     )
@@ -112,9 +193,9 @@
         (set-system
             (get-system-date system)
             (get-system-name system)
-            (get-initial-cb-code-link system)
+            (get-system-start-cb-id system)
             (append (get-system-users system) (list (set-user username #f -1 -1)))
-            (get-chat-history system)
+            (get-system-chat-history system)
             (get-system-cb-list system)
         )
     )
@@ -129,9 +210,9 @@
         (set-system 
             (get-system-date system)
             (get-system-name system)
-            (get-initial-cb-code-link system)
+            (get-system-start-cb-id system)
             (login-user username (get-system-users system))
-            (get-chat-history system)
+            (get-system-chat-history system)
             (get-system-cb-list system)
         )
         system
@@ -146,22 +227,40 @@
     (set-system
         (get-system-date system)
         (get-system-name system)
-        (get-initial-cb-code-link system)
+        (get-system-start-cb-id system)
         (logout (get-system-users system))
-        (get-chat-history system)
+        (get-system-chat-history system)
         (get-system-cb-list system)
     )
 ))
 
-; Descripcion: Funcion que modifica el sistema.
-; Dom: system-name (string) X system-date (string) X system-users (list) X chatbot-list (list)
+; Descripcion: Funcion que permite interactuar con el chatbot usando funciones recursivas.
+; Dom: system (list) X message (string)
 ; Rec: system (list)
 ; Recursion: -
-(define set-system 
-    (lambda (system-date system-name initial-cb-code-link system-users chat-history chatbot-list)
-        (list system-date system-name initial-cb-code-link system-users chat-history chatbot-list)
+(define system-talk-rec (lambda (system message)
+    (if (someone-logged-in? (get-system-users system))
+        (if (valid-message?-rec system message)
+            (set-system
+                (get-system-date system)
+                (get-system-name system)
+                (get-system-start-cb-id system)
+                (change-codelinks-in-user 
+                    (get-system-users system)
+                    (get-option-cb-codelink 
+                        (get-option-by-message-rec (get-current-op-list system) message))
+                    (get-option-fl-codelink 
+                        (get-option-by-message-rec (get-current-op-list system) message))
+                )            
+                (get-system-chat-history system)
+                (get-system-cb-list system)
+            )
+            system
+        )
+        system
+    )
 ))
 
 ; ######################################## EXPORTACION DE FUNCION ############################
 
-(provide system system-add-chatbot system-add-user system-login system-logout)
+(provide (all-defined-out))

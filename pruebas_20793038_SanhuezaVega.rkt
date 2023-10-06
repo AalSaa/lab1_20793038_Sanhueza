@@ -25,3 +25,5 @@
 (define s9 (system-logout s8))
 (define s10 (system-login s9 "user2"))
 s10
+
+(system-talk-rec s10 "viajar")
