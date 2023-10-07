@@ -7,6 +7,7 @@
 (require "TDA_flow_20793038_SanhuezaVega.rkt")
 (require "TDA_chatbot_20793038_SanhuezaVega.rkt")
 (require "TDA_user_20793038_SanhuezaVega.rkt")
+(require "TDA_chathistory_20793038_SanhuezaVega.rkt")
 (require "TDA_tools_20793038_SanhuezaVega.rkt")
 
 ; ######################################## TDA SYSTEM ########################################
@@ -252,7 +253,11 @@
                     (get-option-fl-codelink 
                         (get-option-by-message-rec (get-current-op-list system) message))
                 )            
-                (get-system-chat-history system)
+                (add-record-chat-history 
+                    (get-system-chat-history system)
+                    (get-username (get-user-logged (get-system-users system)))
+                    message
+                )
                 (get-system-cb-list system)
             )
             system
