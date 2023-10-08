@@ -27,3 +27,4 @@
 s10
 
 (system-talk-rec s10 "viajar")
+(system-talk-norec s10 "viajar")

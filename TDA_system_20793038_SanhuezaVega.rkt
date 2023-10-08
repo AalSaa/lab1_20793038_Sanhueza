@@ -58,6 +58,18 @@
     )
 ))
 
+; Descripcion: Funcion que verifica si existe una opcion que contenga el id o mensaje indicado
+;              en la carpeta actual evitando funciones recursivas.
+; Dom: system (list) X message (string)
+; Rec: boolean
+; Recursion: -
+(define valid-message?-norec (lambda (system message)
+    (if (not (boolean? (car (get-cb-and-fl-codelink system))))
+        (option-exists-by-message?-norec (get-current-op-list system) message)
+        #f
+    )
+))
+
 ; ######################################## SELECTOR ##########################################
 
 ; Descripcion: Funcion que obtiene la fecha de creacion del sistema.
@@ -252,6 +264,37 @@
                         (get-option-by-message-rec (get-current-op-list system) message))
                     (get-option-fl-codelink 
                         (get-option-by-message-rec (get-current-op-list system) message))
+                )            
+                (add-record-chat-history 
+                    (get-system-chat-history system)
+                    (get-username (get-user-logged (get-system-users system)))
+                    message
+                )
+                (get-system-cb-list system)
+            )
+            system
+        )
+        system
+    )
+))
+
+; Descripcion: Funcion que permite interactuar con el chatbot usando funciones no recursivas.
+; Dom: system (list) X message (string)
+; Rec: system (list)
+; Recursion: -
+(define system-talk-norec (lambda (system message)
+    (if (someone-logged-in? (get-system-users system))
+        (if (valid-message?-norec system message)
+            (set-system
+                (get-system-date system)
+                (get-system-name system)
+                (get-system-start-cb-id system)
+                (change-codelinks-in-user 
+                    (get-system-users system)
+                    (get-option-cb-codelink 
+                        (get-option-by-message-norec (get-current-op-list system) message))
+                    (get-option-fl-codelink 
+                        (get-option-by-message-norec (get-current-op-list system) message))
                 )            
                 (add-record-chat-history 
                     (get-system-chat-history system)

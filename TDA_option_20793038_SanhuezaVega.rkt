@@ -39,6 +39,23 @@
     (aux option-list message)
 ))
 
+; Descripcion: Funcion no recursiva que verifica si existe una opcion que tenga el id o palabra clave
+;              indicado.
+; Dom: option-list (list) X message (string)
+; Rec: boolean
+; Recursion: -
+(define option-exists-by-message?-norec (lambda (option-list message)
+    (not (null?
+        (filter 
+            (lambda (o)
+                (or (not (boolean? (member message (get-option-keyword o))))
+                    (string=? message (number->string (get-option-id o))))
+            )
+            option-list
+        )
+    ))
+))
+
 ; ######################################## SELECTOR ##########################################
 
 ; Descripcion: Funcion que obtiene el id de una opcion.
@@ -94,6 +111,20 @@
         )
     ))
     (aux option-list message)
+))
+
+; Descripcion: Funcion no recursiva que obtiene una opcion a partir de su id o palabra clave.
+; Dom: option-list (list) X message (string)
+; Rec: option (list)
+; Recursion: -
+(define get-option-by-message-norec (lambda (option-list message)
+    (car (filter 
+        (lambda (o)
+            (or (not (boolean? (member message (get-option-keyword o))))
+                (string=? message (number->string (get-option-id o))))
+        )
+        option-list
+    ))
 ))
 
 ; ######################################## EXPORTACION DE FUNCION ############################
