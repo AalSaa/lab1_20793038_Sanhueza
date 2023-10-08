@@ -18,7 +18,11 @@
 ; Rec: flow (list)
 ; Recursion: -
 (define flow (lambda (id name . option)
-    (set-flow id name (add-elements-in-list option null))
+    (set-flow 
+        id 
+        (string-downcase name) 
+        (add-elements-in-list option null)
+    )
 ))
 
 ; Descripcion: Funcion que construye un flujo.

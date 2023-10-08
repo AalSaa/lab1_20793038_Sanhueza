@@ -28,7 +28,7 @@
 (define system (lambda (name start-cb-id . chatbot)
     (set-system
         (make-current-date)
-        name
+        (string-downcase name)
         start-cb-id
         null
         null
@@ -201,13 +201,13 @@
 ; Rec: system (list)
 ; Recursion: -
 (define system-add-user (lambda (system username)
-    (if (username-exists? username (get-system-users system))
+    (if (username-exists? (string-downcase username) (get-system-users system))
         system
         (set-system
             (get-system-date system)
             (get-system-name system)
             (get-system-start-cb-id system)
-            (append (get-system-users system) (list (set-user username #f -1 -1)))
+            (append (get-system-users system) (list (set-user (string-downcase username) #f -1 -1)))
             (get-system-chat-history system)
             (get-system-cb-list system)
         )
@@ -224,7 +224,7 @@
             (get-system-date system)
             (get-system-name system)
             (get-system-start-cb-id system)
-            (login-user username (get-system-users system))
+            (login-user (string-downcase username) (get-system-users system))
             (get-system-chat-history system)
             (get-system-cb-list system)
         )
@@ -253,7 +253,7 @@
 ; Recursion: -
 (define system-talk-rec (lambda (system message)
     (if (someone-logged-in? (get-system-users system))
-        (if (valid-message?-rec system message)
+        (if (valid-message?-rec system (string-downcase message))
             (set-system
                 (get-system-date system)
                 (get-system-name system)
@@ -261,14 +261,18 @@
                 (change-codelinks-in-user 
                     (get-system-users system)
                     (get-option-cb-codelink 
-                        (get-option-by-message-rec (get-current-op-list system) message))
+                        (get-option-by-message-rec 
+                            (get-current-op-list system) 
+                            (string-downcase message)))
                     (get-option-fl-codelink 
-                        (get-option-by-message-rec (get-current-op-list system) message))
+                        (get-option-by-message-rec 
+                            (get-current-op-list system) 
+                            (string-downcase message)))
                 )            
                 (add-record-chat-history 
                     (get-system-chat-history system)
                     (get-username (get-user-logged (get-system-users system)))
-                    message
+                    (string-downcase message)
                 )
                 (get-system-cb-list system)
             )
@@ -284,7 +288,7 @@
 ; Recursion: -
 (define system-talk-norec (lambda (system message)
     (if (someone-logged-in? (get-system-users system))
-        (if (valid-message?-norec system message)
+        (if (valid-message?-norec system (string-downcase message))
             (set-system
                 (get-system-date system)
                 (get-system-name system)
@@ -292,14 +296,18 @@
                 (change-codelinks-in-user 
                     (get-system-users system)
                     (get-option-cb-codelink 
-                        (get-option-by-message-norec (get-current-op-list system) message))
+                        (get-option-by-message-norec 
+                            (get-current-op-list system) 
+                            (string-downcase message)))
                     (get-option-fl-codelink 
-                        (get-option-by-message-norec (get-current-op-list system) message))
+                        (get-option-by-message-norec 
+                            (get-current-op-list system) 
+                            (string-downcase message)))
                 )            
                 (add-record-chat-history 
                     (get-system-chat-history system)
                     (get-username (get-user-logged (get-system-users system)))
-                    message
+                    (string-downcase message)
                 )
                 (get-system-cb-list system)
             )

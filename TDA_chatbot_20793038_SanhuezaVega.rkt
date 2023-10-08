@@ -19,7 +19,12 @@
 ; Rec: chatbot (list)
 ; Recursion: -
 (define chatbot (lambda (id name welcome-message start-flow-id  . flows)
-    (set-chatbot id name welcome-message start-flow-id (add-elements-in-list flows null))
+    (set-chatbot 
+        id 
+        (string-downcase name) 
+        (string-downcase welcome-message)
+        start-flow-id
+        (add-elements-in-list flows null))
 ))
 
 ; Descripcion: Funcion que construye un chatbot.

@@ -15,7 +15,13 @@
 ; Rec: option (list)
 ; Recursion: -
 (define option (lambda (id message chatbot-codelink flow-codelink . keyword)
-    (list id message chatbot-codelink flow-codelink keyword)
+    (list 
+        id 
+        (string-downcase message) 
+        chatbot-codelink 
+        flow-codelink 
+        (map string-downcase keyword)
+        )
 ))
 
 ; ######################################## PERTENENCIA #######################################
