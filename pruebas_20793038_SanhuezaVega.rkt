@@ -2,15 +2,12 @@
 
 ; ######################################## LLAMADO DE TDA´s ##################################
 
-(require "TDA_option_20793038_SanhuezaVega.rkt")
-(require "TDA_flow_20793038_SanhuezaVega.rkt")
-(require "TDA_chatbot_20793038_SanhuezaVega.rkt")
-(require "TDA_system_20793038_SanhuezaVega.rkt")
+(require "TDA_main.rkt")
 
 ; ######################################## NOTA ##############################################
 
 ; El Script de prueba 1 se ha convertido en un bloque para no generar errores con el script 2
-; para las nuevas pruebask, se usaran variables distintas a las del script 1 y 2.
+; para las nuevas pruebas, se usaran variables distintas a las del script 1 y 2.
 
 ; ######################################## SCRIPTS DE PRUEBA #################################
 
@@ -204,9 +201,6 @@
 ; ultimo deslogueo (fin de pruebas)
 
 (define s127 (system-logout s126)) ; system-logout 3/3
-
-
-
 
 
 

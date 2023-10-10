@@ -7,6 +7,16 @@
 ; Este TDA corresponde a un usuario.
 ; Dentro se guardara el nombre del usuario y un estado de actividad.
 
+; ######################################## CONSTRUCTOR #######################################
+
+; Descripcion: Funcion que genera un usuario.
+; Dom: username (string) X user-status (boolean) X user-chat-history (list)
+; Rec: user (list)
+; Recursion: -
+(define set-user (lambda (username user-status cb-code-link fl-code-link)
+    (list username user-status cb-code-link fl-code-link)
+))
+
 ; ######################################## PERTENENCIA #######################################
 
 ; Descripcion: Funcion que verifica si el username de un usuario ya existe en una lista de usuarios.
@@ -82,14 +92,6 @@
 ))
 
 ; ######################################## MODIFICADOR #######################################
-
-; Descripcion: Funcion que genera un usuario.
-; Dom: username (string) X user-status (boolean) X user-chat-history (list)
-; Rec: user (list)
-; Recursion: -
-(define set-user (lambda (username user-status cb-code-link fl-code-link)
-    (list username user-status cb-code-link fl-code-link)
-))
 
 ; Descripcion: Funcion que conecta a un usuario.
 ; Dom: username (string) X users-list (list)
